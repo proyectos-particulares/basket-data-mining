@@ -13,17 +13,19 @@ def ejecutar_script_en_url(
 ):
     service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()
+
+    # Ejecutar sin ventanas emergentes del navegador.
     options.add_argument('--headless')
 
     driver = webdriver.Chrome(service=service, options=options)
     try:
-        # Abrir la página web
+        # Abrir la página web.
         driver.get(url_pagina)
 
         print(f"- Cargando {url_pagina}...")
         time.sleep(tiempo_espera_carga)
 
-        # Ejecutar el script JS
+        # Ejecutar el script JS.
         result = driver.execute_script(script_js)
 
         print(f"- Ejecutando script JS...")

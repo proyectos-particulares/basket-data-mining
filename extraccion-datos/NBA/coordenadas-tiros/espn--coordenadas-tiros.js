@@ -65,7 +65,6 @@ function extraerDatos() {
         });
     });
 
-    // console.log(datos);
     return datos;
 }
 

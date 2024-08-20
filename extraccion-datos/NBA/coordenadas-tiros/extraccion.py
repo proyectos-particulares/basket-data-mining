@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from utils.python.ejecutar_script_js_en_url import ejecutar_script_en_url
 
 RUTA_SCRIPT = './espn--coordenadas-tiros.js'
@@ -21,8 +23,12 @@ def main():
         utl_pagina = resultado['url']
         datos = resultado['datos']
 
+        if len(datos) == 0:
+            print("No se encontraron datos")
+            continue
+
         print(f"\nResultados para {utl_pagina}:")
-        print(datos)
+        pprint(datos)
 
 
 if __name__ == '__main__':
