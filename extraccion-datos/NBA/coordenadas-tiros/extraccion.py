@@ -1,6 +1,8 @@
-from pprint import pprint
+import pandas as pd
 
 from utils.python.ejecutar_script_js_en_url import ejecutar_script_en_url
+
+# from pprint import pprint
 
 RUTA_SCRIPT = './espn--coordenadas-tiros.js'
 LINKS_PAGINAS = [
@@ -90,26 +92,45 @@ LINKS_PAGINAS = [
 
 
 def main():
-    # Lista para almacenar todos los resultados
+    # Lista para almacenar todos los resultados.
     resultados = []
     script = open(RUTA_SCRIPT, 'r').read()
 
-    # Recorrer cada URL y ejecutar el script JS
+    # Recorrer cada URL y ejecutar el script JS.
     for url in LINKS_PAGINAS:
         resultado = ejecutar_script_en_url(url, script, 0)
         resultados.append({'url': url, 'datos': resultado})
 
-    # Mostrar todos los resultados juntos
-    for resultado in resultados:
-        utl_pagina = resultado['url']
-        datos = resultado['datos']
+    print()
 
-        if len(datos) == 0:
-            print("No se encontraron datos")
-            continue
+    # Crear un archivo Excel con múltiples hojas.
+    with pd.ExcelWriter('./documentos-generados/partidos-warriors--23-24.xlsx', engine='xlsxwriter') as xls_writer:
+        for resultado in resultados:
+            url_pagina = resultado['url']
+            datos = resultado['datos']
 
-        print(f"\nResultados para {utl_pagina}:")
-        pprint(datos)
+            if len(datos) == 0:
+                print(f"No se encontraron datos para {url_pagina}")
+                continue
+
+            # Convertir datos a DataFrame
+            data_frame = pd.DataFrame(datos)
+
+            # Nombre de la hoja en el archivo Excel
+            nombre_partido = url_pagina.split('/')[-1]
+
+            # Guardar DataFrame en una hoja del archivo Excel
+            data_frame.to_excel(xls_writer, sheet_name=nombre_partido, index=False)
+            hoja = xls_writer.sheets[nombre_partido]
+
+            # Ajustar el ancho de las columnas automáticamente
+            for i, col in enumerate(data_frame.columns):
+                max_length = max(data_frame[col].astype(str).map(len).max(), len(col)) + 2
+                hoja.set_column(i, i, max_length)
+
+            print(f"Resultados para {url_pagina} guardados en la hoja: {nombre_partido}")
+
+        print("\n¡Archivo Excel creado con éxito!")
 
 
 if __name__ == '__main__':

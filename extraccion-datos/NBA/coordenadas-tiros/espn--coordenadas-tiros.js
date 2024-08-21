@@ -4,6 +4,21 @@ const RESULTADOS_DE_TIRO = [
     'bloquea (tapa)',
 ];
 
+
+function extraerEquipos() {
+    return [...document.querySelectorAll('.ShotChartControls__team')].reduce((equipos, elemento) => {
+        const elementoColor = elemento.querySelector('.ShotChartControls__marker');
+
+        equipos.push({
+            color: window.getComputedStyle(elementoColor).borderColor,
+            nombre: elemento.querySelector('.ShotChartControls__team__title').textContent,
+        });
+
+        return equipos;
+    }, []);
+}
+
+
 function extraerResultadoTiro(texto) {
     // Devuelve el resultado del tiro: anota, falla o bloquea (tapa).
     for (const tipo of RESULTADOS_DE_TIRO) {
@@ -36,6 +51,27 @@ function extraerDistanciaAlAro(texto) {
         0;
 }
 
+function escogerNombreEquipo(borderColor, equipos) {
+    if (equipos.length !== 2) {
+        return 'error';
+    }
+    if (borderColor === equipos[0].color) {
+        return equipos[0].nombre;
+    }
+    if (borderColor === equipos[1].color) {
+        return equipos[1].nombre;
+    }
+    return 'error raro';
+}
+
+function extraerTipoDeTiro(restoDivisionPorResultado) {
+    if (restoDivisionPorResultado.match(/(\d+)'/g)) {
+        const restoDivisionDivididoPorComilla = restoDivisionPorResultado.split("'");
+        return restoDivisionDivididoPorComilla[restoDivisionDivididoPorComilla.length - 1].trim();
+    }
+    return restoDivisionPorResultado.trim();
+}
+
 function extraerDatos() {
     const contenedor = document.querySelector('.ShotChart__court-inner');
     const anchoContenedor = contenedor.offsetWidth;
@@ -46,6 +82,7 @@ function extraerDatos() {
     // diferenciar equipos por el border-color.
 
     const datos = [];
+    const equipos = extraerEquipos();
 
     contenedor.querySelectorAll('.ShotChart__court__play').forEach(li => {
         const estilos = window.getComputedStyle(li);
@@ -59,9 +96,9 @@ function extraerDatos() {
             y: parseFloat(estilos.top) / altoContenedor * 100,
             puntos: extraerPuntos(texto, resultadoTiro),
             distanciaAlAro: extraerDistanciaAlAro(texto),
-            tipoDeTiro: restoDivisionPorResultado,
+            tipoDeTiro: extraerTipoDeTiro(restoDivisionPorResultado),
             nombreJugador: nombreJugador.trim(),
-            nombreEquipo: estilos.borderColor,
+            nombreEquipo: escogerNombreEquipo(estilos.borderColor, equipos),
         });
     });
 
