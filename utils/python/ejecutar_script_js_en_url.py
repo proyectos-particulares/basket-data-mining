@@ -8,8 +8,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 def ejecutar_script_en_url(
         url_pagina,
         script_js,
-        tiempo_espera_carga=1,
-        tiempo_espera_script=0
+        tiempo_espera_carga = 1,
+        tiempo_espera_script = 0
 ):
     service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()

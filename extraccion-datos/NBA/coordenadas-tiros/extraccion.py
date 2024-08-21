@@ -2,8 +2,6 @@ import pandas as pd
 
 from utils.python.ejecutar_script_js_en_url import ejecutar_script_en_url
 
-# from pprint import pprint
-
 RUTA_SCRIPT = './espn--coordenadas-tiros.js'
 LINKS_PAGINAS = [
     'https://espndeportes.espn.com/basquetbol/nba/juego/_/juegoId/401584690/suns-warriors',

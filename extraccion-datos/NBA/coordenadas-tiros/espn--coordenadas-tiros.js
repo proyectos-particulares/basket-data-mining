@@ -93,7 +93,7 @@ function extraerDatos() {
 
         datos.push({
             x: parseFloat(estilos.left) / anchoContenedor * 100,
-            y: parseFloat(estilos.top) / altoContenedor * 100,
+            y: parseFloat(estilos.bottom) / altoContenedor * 100,
             puntos: extraerPuntos(texto, resultadoTiro),
             distanciaAlAro: extraerDistanciaAlAro(texto),
             tipoDeTiro: extraerTipoDeTiro(restoDivisionPorResultado),
